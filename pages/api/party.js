@@ -21,7 +21,8 @@ const CURRENT_VOTES = [].concat(
 	nils(6),
 	[[5,0], [17,12]],
 	nils(1),
-	[[7,2], [0, 0], [3, 1], [15, 12], [2, 1], [0, 0]], // nana + 1
+	[[7,2], [0, 0], [3, 1], [15, 12], [2, 1], [0, 0], [4, 0]],
+	// current: BURN THE WITCH
 )
 
 export default async (req, res) => {
@@ -42,7 +43,7 @@ export default async (req, res) => {
 			return `contested: ${skip - veto} (${skip}-${veto})`
 		}
 		const timestamps = {
-			eta: etaDate(-5, NOW),
+			eta: etaDate(-2, NOW), // offset, if CURRENT_VOTES written after start
 			now: NOW,
 		}
 
