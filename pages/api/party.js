@@ -1,29 +1,33 @@
-// FIXME: load .tsv w/ fs vs. HTTP fetch?
 const fs = require('fs')
 const path = require('path')
+//const querystring = require('querystring')
+
+// FIXME: load .tsv w/ fs vs. HTTP fetch?
 import fetch from 'node-fetch'
-//import { pick } from 'lodash'
+//import _ from 'lodash'
 
 const minDuration = (text, defaultValue = text) => {
 	switch (text) {
-		case '': return 22;
-		case 'Y': return 4;
+		case '': return 22; // standard
+		case 'Y': return 4; // short
 		default: return defaultValue;
 	}
 }
 
 const etaDate = (min, now = NOW) => new Date(min * 60000 + now.getTime())
-const THIS_FILE = path.resolve(process.cwd(), 'pages', 'api', 'party.js')
-const NOW = fs.statSync(THIS_FILE).mtime // i.e. when CURRENT_VOTES up
-const nils = (length = 0) => Array.from({ length }, () => [0, 0])
+const VOTE_FILE = path.resolve(process.cwd(), 'pages', 'api', 'votes.csv')
+const NOW = fs.statSync(VOTE_FILE).mtime // i.e. when CURRENT_VOTES updated
 
-const CURRENT_VOTES = [].concat(
-	nils(6),
-	[[5,0], [17,12]],
-	nils(1),
-	[[7,2], [0, 0], [3, 1], [15, 12], [2, 1], [0, 0], [4, 0]],
-	// current: BURN THE WITCH
-)
+const start = etaDate(+22, NOW) // offset, if VOTE_FILE hit after start of ep
+const csv = fs.readFileSync(VOTE_FILE, 'utf8').split('\n'); csv.pop()
+const CURRENT_VOTES = Array.from(csv, row => row.split(','))
+
+const formatDate = eta => eta.toTimeString().split(' ')[0].slice(0, 5)
+const score = ([skip, veto]) => {
+	if (isNaN(skip) || isNaN(veto)) return 'in progress'
+	if (skip == '0' && veto == '0') return 'not contested'
+	return `contested: ${skip - veto} (${skip}-${veto})`
+}
 
 export default async (req, res) => {
 	try {
@@ -34,16 +38,10 @@ export default async (req, res) => {
 		const headers = []
 		headers.push('Title (or, 日本語)')
 		headers.push('Est. Duration (min)')
-		headers.push('Est. Play Time (when)')
+		headers.push('Est. Done Time (when)')
 		headers.push('Notes (incl. score)')
-		const formatDate = eta => eta.toTimeString().split(' ')[0].slice(0, 5)
-		const score = ([skip, veto]) => {
-			if (isNaN(skip) || isNaN(veto)) return 'in progress'
-			if (skip === 0 && veto === 0) return 'not contested'
-			return `contested: ${skip - veto} (${skip}-${veto})`
-		}
 		const timestamps = {
-			eta: etaDate(-2, NOW), // offset, if CURRENT_VOTES written after start
+			eta: start,
 			now: NOW,
 		}
 
@@ -61,7 +59,7 @@ export default async (req, res) => {
 		}
 
 		res.statusCode = 200
-		console.debug(req.headers['x-forwarded-for'])
+		console.debug('GET /api:', req.headers['x-forwarded-for'] || 'localhost')
 		res.json(Object.assign({ err: null, headers, raw: rows }, timestamps))
 	} catch (err) {
 		console.error(err)
