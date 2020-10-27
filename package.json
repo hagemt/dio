@@ -9,14 +9,33 @@
     "swr": "0.3.6"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "4.6.0",
+    "@typescript-eslint/parser": "4.6.0",
+    "eslint": "7.12.1",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.21.5",
+    "mocha": "8.2.0",
     "next": "10.0.0",
-    "ngrok": "3.3.0"
+    "ngrok": "3.3.0",
+    "nyc": "15.1.0",
+    "prettier": "2.1.2",
+    "serve": "11.3.2",
+    "typescript": "4.0.5",
+    "vercel": "20.1.2"
+  },
+  "prettier": {
+    "jsxSingleQuote": true,
+    "printWidth": 120,
+    "quoteProps": "consistent",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": true
   },
   "scripts": {
-    "dev": "npm run next:dev",
-    "next": "next",
-    "next:dev": "npm run next -- dev",
-    "start": "npm run dev",
-    "test": "npm run dev"
+    "next": "next"
   }
 }
