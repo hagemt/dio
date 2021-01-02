@@ -1,39 +1,49 @@
-const fs = require('fs')
-const path = require('path')
-//const querystring = require('querystring')
-
-// FIXME: load .tsv w/ fs vs. HTTP fetch?
 import fetch from 'node-fetch'
-//import _ from 'lodash'
+
+import fs from 'fs'
+import path from 'path'
+
+const etaDate = (min, now = NOW) => new Date(min * 60000 + now.getTime())
+const formatDate = (eta) => eta.toTimeString().split(' ')[0].slice(0, 5)
 
 const minDuration = (text, defaultValue = text) => {
 	switch (text) {
-		case '': return 22; // standard
-		case 'Y': return 4; // short
-		default: return defaultValue;
+		case '':
+			return 22 // standard
+		case 'Y':
+			return 4 // short
+		default:
+			return defaultValue
 	}
 }
 
-const etaDate = (min, now = NOW) => new Date(min * 60000 + now.getTime())
-const VOTE_FILE = path.resolve(process.cwd(), 'pages', 'api', 'votes.csv')
-const NOW = fs.statSync(VOTE_FILE).mtime // i.e. when CURRENT_VOTES updated
-
-const start = etaDate(+22, NOW) // offset, if VOTE_FILE hit after start of ep
-const csv = fs.readFileSync(VOTE_FILE, 'utf8').split('\n'); csv.pop()
-const CURRENT_VOTES = Array.from(csv, row => row.split(','))
-
-const formatDate = eta => eta.toTimeString().split(' ')[0].slice(0, 5)
-const score = ([skip, veto]) => {
+const noteVotes = ([skip, veto]) => {
 	if (isNaN(skip) || isNaN(veto)) return 'in progress'
 	if (skip == '0' && veto == '0') return 'not contested'
 	return `contested: ${skip - veto} (${skip}-${veto})`
 }
 
+const sepValues = (utf8, ifs, eol = '\n') => {
+	const lines = utf8.split(eol)
+	lines.pop()
+	return Array.from(lines, (line) => line.trim().split(ifs))
+}
+
+const VOTE_FILE = path.resolve('pages', 'api', 'votes.csv')
+const csv = fs.readFileSync(VOTE_FILE, 'utf8')
+const CURRENT_VOTES = sepValues(csv, ',')
+const NOW = fs.statSync(VOTE_FILE).mtime
+const start = etaDate(+22, NOW)
+// VOTE_FILE is touched N min past ep op
+// NOW when CURRENT_VOTES last updated
+// start is offset in minutes (+/-N)
+
+// eslint-disable-next-line
 export default async (req, res) => {
 	try {
 		const url = `http://${req.headers['host']}/live-anime-today.tsv`
-		const text = await fetch(url).then(async response => response.text())
-		const tsv = text.split('\r\n').map(row => row.split('\t')); tsv.pop()
+		const text = await fetch(url).then(async (res) => res.ok && res.text())
+		const tsv = sepValues(text, '\t')
 
 		const headers = []
 		headers.push('Title (or, 日本語)')
@@ -53,8 +63,8 @@ export default async (req, res) => {
 			const title = row[1] || row[0] // in Japanese
 			const dt = minDuration(row[3]) // isShort=Y? 4 : 22
 			const next = isFuture ? etaDate(dt, timestamps.eta) : null
-			const when = isFuture ? formatDate(timestamps.eta = next) : ''
-			const note = isFuture ? 'TBA' : score(currentVotes)
+			const when = isFuture ? formatDate((timestamps.eta = next)) : ''
+			const note = isFuture ? 'TBA' : noteVotes(currentVotes)
 			rows.push([title, dt, when, note])
 		}
 
