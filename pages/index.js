@@ -84,7 +84,19 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 	}
 	const when = jsonRequest.justBefore || new Date()
 	const took = 1 + (new Date() - when) // load duration in ms
-	if (egg) new Konami(egg) // https://en.wikipedia.org/wiki/Konami_Code
+	if (egg) {
+		new Konami(() => {
+			// https://en.wikipedia.org/wiki/Konami_Code + Anime shitpoasts
+			if (typeof Audio !== 'undefined') {
+				const audio = new Audio('/dio.mp3')
+				audio.loop = true
+				audio.play()
+			}
+			const vid = 'https://www.youtube.com/watch?v=orsYHTkgZBc'
+			const dio = prompt('OMAE WA MO SHINDEIRU', 'NANI!?')
+			window.location = dio === 'KONO DIO DA' ? vid : egg
+		})
+	}
 
 	return (
 		<>
