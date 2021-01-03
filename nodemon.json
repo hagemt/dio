@@ -1,5 +1,5 @@
 {
-  "delay": 20000,
+  "delay": 1000,
   "ext": "css,csv,js,json,jsx,ts,tsv,tsx",
   "verbose": true
 }

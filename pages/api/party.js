@@ -49,7 +49,7 @@ const start = etaDate(-1) // XXX: tweak
 export default async (req, res) => {
 	// eslint-disable-next-line prettier/prettier -- FIXME: find best way to extract the YYYY-MM-DD (of now)
 	const date = VOTES_CSV.replace(/\.?votes\.csv$/, '').split('/').pop() || NOW.toISOString().split('T')[0]
-	const url = process.env.ANIME_TSV || `http://${req.headers['host']}/anime.tsv` // see /public folder
+	const url = `http://${req.headers['host']}/${process.env.ANIME_TSV || 'anime.tsv'}` // see /public folder
 	try {
 		const text = await fetch(url).then(async (res) => res.ok && res.text())
 		const tsv = sepValues(text, '\t') // TODO: can compute this more lazily
