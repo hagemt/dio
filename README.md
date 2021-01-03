@@ -8,6 +8,12 @@ Link, when running: http://dio.ngrok.io
 
 ![IT WAS ME](public/dio.jpg)
 
+## TODO
+
+- Bootstrap 5
+- Google Analytics?
+
 ## Screenshots
 
-![Dio 2020](public/2020.png)
+![Dio 2020](public/dio.png)
+

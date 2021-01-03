@@ -1,8 +1,8 @@
-/* eslint-env node */
 module.exports = {
 	env: {
 		browser: true,
 		es2021: true,
+		node: true,
 	},
 
 	extends: [
@@ -14,7 +14,7 @@ module.exports = {
 		'prettier',
 	],
 
-	ignorePatterns: ['!.eslintrc.js'],
+	ignorePatterns: ['cypress/**/*', '!.eslintrc.js'],
 
 	parser: '@typescript-eslint/parser',
 
@@ -34,9 +34,12 @@ module.exports = {
 		'react',
 	],
 
+	reportUnusedDisableDirectives: true,
+
 	root: true,
 
 	rules: {
+		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'sort-keys': 'warn',
 	},
 

@@ -3,7 +3,7 @@
 CONTAINER_NAME ?= dio
 IMAGE_TAG ?= hagemt/$(CONTAINER_NAME):latest
 
-HTTP_PORT ?= 9001
+HTTP_PORT ?= 3000
 HTTP_ARGS ?= -e "HTTP_PORT=$(HTTP_PORT)" -p "$(HTTP_PORT):$(HTTP_PORT)/tcp"
 
 all: dev
@@ -12,7 +12,7 @@ clean:
 	git clean -dix
 
 dev: node_modules
-	npm run next -- dev
+	npm run dev
 
 image:
 	[[ -n "$(shell docker images "$(IMAGE_TAG)" -q)" ]] \
