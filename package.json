@@ -26,7 +26,6 @@
     "vercel": "20.1.2"
   },
   "prettier": {
-    "jsxSingleQuote": true,
     "printWidth": 120,
     "quoteProps": "consistent",
     "semi": false,
@@ -36,6 +35,9 @@
     "useTabs": true
   },
   "scripts": {
-    "next": "next"
+    "lint": "eslint --ext js --fix -- .",
+    "next": "next",
+    "start": "npm run next",
+    "test": "npm run lint"
   }
 }
