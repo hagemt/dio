@@ -8,7 +8,6 @@ const parseArray = (req, name, defaultValues = []) => {
 	return values.length > 0 ? values : defaultValues
 }
 
-// eslint-disable-next-line
 export default (req, res) => {
 	const name = parseArray(req, 'name', ['John', 'Doe']).join(' ')
 	const body = {
