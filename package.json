@@ -4,6 +4,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@svgr/webpack": "5.5.0",
     "autoprefixer": "10.1.0",
     "bootstrap": "4.5.3",
     "bootstrap-icons": "1.2.2",

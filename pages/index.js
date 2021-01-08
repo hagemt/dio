@@ -6,14 +6,26 @@ import React from 'react'
 import Types from 'prop-types'
 import useSWR from 'swr'
 
-import { Alert, Badge, Container, Nav, Navbar, Table } from 'react-bootstrap'
+import {
+	Alert,
+	Badge,
+	//Button,
+	Container,
+	Image,
+	Nav,
+	Navbar,
+	OverlayTrigger,
+	Table,
+	Toast,
+	Tooltip,
+} from 'react-bootstrap'
+
+//import SVG from '../public/Konami_Code.svg'
 
 const ALL_BORDER_CSS = '1px solid black'
 const REFRESH_API_MS = 2000
 
-//const [zero, odd, even] = ['snow', 'ivory', 'linen']
 const bg = (idx, border = ALL_BORDER_CSS) => ({
-	//backgroundColor: idx ? (idx % 2 == 0 ? even : odd) : zero,
 	border: border,
 })
 
@@ -64,6 +76,71 @@ AnimeTable.propTypes = {
 }
 
 const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
+	const [show, setShow] = React.useState(false) // for Toast
+	const eggAndToast = () => {
+		if (!egg) {
+			return null
+		}
+		new Konami(async () => {
+			// https://en.wikipedia.org/wiki/Konami_Code + Anime shitpoasts
+			try {
+				await Promise.resolve()
+					.then(async () => new Audio('/Loud_Noise.mp3').play())
+					.then(async () => {
+						await new Promise((done) => setTimeout(done, 15000))
+						const audio = new Audio('/dio.mp3')
+						audio.loop = true // ew
+						await audio.play()
+					})
+			} catch (error) {
+				console.error(error)
+			}
+			// extra secret
+			const amv = 'https://www.youtube.com/embed/orsYHTkgZBc?autoplay=1&controls=0&loop=1&rel=0'
+			const answer = prompt('OMAE WA MO SHINDEIRU', 'NANI!?')
+			window.location = answer === 'KONO DIO DA!' ? amv : egg
+		})
+		const style = {
+			position: 'absolute',
+			right: 0,
+			top: 0,
+		}
+		return (
+			<div aria-atomic="true" aria-live="polite" style={{ minHeight: '100px', position: 'relative' }}>
+				<Toast autohide delay={1000} onClose={() => setShow(false)} show={show} style={style}>
+					<Toast.Header>
+						<img alt="" className="mr-2 rounded" src="holder.js/20x20?text=%20" />
+						<strong className="mr-auto">Easter egg</strong>
+						<small>KONO DIO DA!</small>
+					</Toast.Header>
+					<Toast.Body>
+						<span>Ready or not, here I come!</span>
+					</Toast.Body>
+				</Toast>
+			</div>
+		)
+	}
+
+	const navBranding = (dio, src = egg ? '/Konami_Code.svg' : null) => {
+		if (!src) {
+			return <Navbar.Brand href="/">{dio}</Navbar.Brand>
+		}
+		const delay = {
+			hide: 400,
+			show: 250,
+		}
+		const renderTooltip = (props) => (
+			<Tooltip id="svg" {...props}>
+				<Image alt={src} src={src} style={{ height: '15px', width: '160px' }} />
+			</Tooltip>
+		)
+		return (
+			<OverlayTrigger delay={delay} overlay={renderTooltip} placement="bottom">
+				<Navbar.Brand href="/">{dio}</Navbar.Brand>
+			</OverlayTrigger>
+		)
+	}
+
 	const { data, error } = useSWR(api, jsonRequest, {
 		refreshInterval,
 	})
@@ -71,7 +148,7 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 		console.error(error)
 		return (
 			<Container className="p-3" fluid="sm">
-				<Alert variant="warning">Oops! (please refresh)</Alert>
+				<Alert variant="warning">Oops! (please wait a minute, then refresh)</Alert>
 			</Container>
 		)
 	}
@@ -82,21 +159,8 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 			</Container>
 		)
 	}
-	const when = jsonRequest.justBefore || new Date()
+	const when = jsonRequest.justBefore || new Date() // yuck
 	const took = 1 + (new Date() - when) // load duration in ms
-	if (egg) {
-		new Konami(() => {
-			// https://en.wikipedia.org/wiki/Konami_Code + Anime shitpoasts
-			if (typeof Audio !== 'undefined') {
-				const audio = new Audio('/dio.mp3')
-				audio.loop = true
-				audio.play()
-			}
-			const vid = 'https://www.youtube.com/watch?v=orsYHTkgZBc'
-			const dio = prompt('OMAE WA MO SHINDEIRU', 'NANI!?')
-			window.location = dio === 'KONO DIO DA' ? vid : egg
-		})
-	}
 
 	return (
 		<>
@@ -104,7 +168,7 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 				<title>Dio</title>
 			</Head>
 			<Navbar bg="light" expand="md">
-				<Navbar.Brand href="/">Dio</Navbar.Brand>
+				{navBranding('Dio')}
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse>
 					<Nav activeKey="#">
@@ -148,6 +212,7 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 						</span>
 					</p>
 				</footer>
+				{eggAndToast()}
 			</main>
 		</>
 	)

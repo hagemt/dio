@@ -58,7 +58,7 @@ export default async (req, res) => {
 		columns.push('English Title (or, 日本語)')
 		columns.push('Est. Schedule (start time)')
 		columns.push('Est. Duration (minutes)')
-		columns.push('Score (votes to skip - veto)')
+		columns.push('Notes (score = skip - veto)')
 		const timestamps = {
 			eta: start,
 			now: NOW,
