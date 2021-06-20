@@ -48,7 +48,7 @@
   "scripts": {
     "//": "TODO: make npm start/test actually run container and cypress?",
     "dev": "cross-env NODE_ENV=development nodemon --exec npm run dev:next",
-    "dev:next": "npm test && npm run next dev",
+    "dev:next": "next dev #npm test && npm run next dev",
     "eslint": "eslint --ext js,jsx,ts,tsx --fix --max-warnings=0 -- .",
     "next": "next",
     "start": "npm run dev",
