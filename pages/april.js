@@ -18,7 +18,7 @@ import {
 	Table,
 	Toast,
 	Tooltip,
-} from 'react-bootstrap-v5'
+} from 'react-bootstrap'
 
 //import SVG from '../public/Konami_Code.svg'
 
