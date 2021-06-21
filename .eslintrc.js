@@ -7,7 +7,7 @@ module.exports = {
 
 	extends: [
 		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
+		//'plugin:@typescript-eslint/recommended',
 		'plugin:import/recommended',
 		'plugin:prettier/recommended',
 		'plugin:react/recommended',
@@ -16,7 +16,7 @@ module.exports = {
 
 	ignorePatterns: ['cypress/**/*', '!.eslintrc.js'],
 
-	parser: '@typescript-eslint/parser',
+	//parser: '@typescript-eslint/parser',
 
 	parserOptions: {
 		ecmaFeatures: {
@@ -28,7 +28,7 @@ module.exports = {
 
 	plugins: [
 		// TODO: adopt .tsx?
-		'@typescript-eslint',
+		//'@typescript-eslint',
 		'import',
 		'prettier',
 		'react',
@@ -39,7 +39,7 @@ module.exports = {
 	root: true,
 
 	rules: {
-		'@typescript-eslint/explicit-module-boundary-types': 'off',
+		//'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'sort-keys': 'warn',
 	},
 
