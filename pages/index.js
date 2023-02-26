@@ -1,4 +1,4 @@
-//import { URL } from 'url'
+//import { URL } from 'node:url'
 
 import Head from 'next/head'
 import Konami from 'konami'

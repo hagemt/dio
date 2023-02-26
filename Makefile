@@ -2,7 +2,7 @@
 
 CONTAINER_NAME ?= dio
 IMAGE_TAG ?= hagemt/$(CONTAINER_NAME):latest
-HTTP_PORT ?= 3002
+HTTP_PORT ?= 3003
 
 app: dev
 

@@ -1,8 +1,6 @@
-import fetch from 'node-fetch'
-
-import fs from 'fs'
-import os from 'os'
-import path from 'path'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 
 const formatDate = (now = NOW) => now.toTimeString().split(' ')[0].slice(0, 5) // HH:MM
 const etaDate = (delta, now = NOW) => new Date(delta * 60000 + now.getTime()) // in MMs
@@ -34,6 +32,7 @@ const sepValues = (utf8, ifs, eol = os.EOL) => {
 	return Array.from(lines, (line) => line.trim().split(ifs))
 }
 
+const ANIME_TSV = process.env.ANIME_TSV || 'anime.tsv'
 const VOTES_CSV = process.env.VOTES_CSV || 'votes.csv'
 const VOTE_FILE = path.resolve('public', VOTES_CSV)
 const csv = fs.readFileSync(VOTE_FILE, 'utf8')
@@ -42,17 +41,18 @@ const CURRENT_VOTES = sepValues(csv, ',')
 const NOW = fs.statSync(VOTE_FILE).mtime
 const start = etaDate(-1) // XXX: tweak
 
-// VOTE_FILE is touched N min "after OP"
+// VOTES_CSV is touched N min "after OP"
 // NOW = when CURRENT_VOTES last updated
 // number is an offset in minutes (+/-N)
 
-export default async (req, res) => {
+// TODO: can compute this more lazily
+const text = fs.readFileSync(path.resolve('public', ANIME_TSV), 'utf8')
+
+export default (req, res) => {
 	// eslint-disable-next-line prettier/prettier -- FIXME: find best way to extract the YYYY-MM-DD (of now)
 	const date = VOTES_CSV.replace(/\.?votes\.csv$/, '').split('/').pop() || NOW.toISOString().split('T')[0]
-	const url = `http://${req.headers['host']}/${process.env.ANIME_TSV || 'anime.tsv'}` // see /public folder
 	try {
-		const text = await fetch(url).then(async (res) => res.ok && res.text())
-		const tsv = sepValues(text, '\t') // TODO: can compute this more lazily
+		const tsv = sepValues(text, '\t')
 
 		const columns = []
 		columns.push('English Title (or, 日本語)')
@@ -80,10 +80,10 @@ export default async (req, res) => {
 
 		console.debug(new Date().toISOString(), 'GET /api via:', req.headers['x-forwarded-for'] || 'localhost')
 		res.statusCode = 200
-		res.json(Object.assign({ columns, date, err: null, raw: rows, url }, timestamps))
+		res.json(Object.assign({ columns, date, err: null, raw: rows }, timestamps))
 	} catch (err) {
 		console.error(err)
 		res.statusCode = 500
-		res.json({ columns: [], date, err: err.message, eta: NOW, now: NOW, raw: [], url })
+		res.json({ columns: [], date, err: err.message, eta: NOW, now: NOW, raw: [] })
 	}
 }
