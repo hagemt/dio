@@ -25,7 +25,7 @@ import {
 const ALL_BORDER_CSS = '1px solid black'
 const REFRESH_API_MS = 2000
 
-const bg = (idx, border = ALL_BORDER_CSS) => ({
+const bg = (_idx, border = ALL_BORDER_CSS) => ({
 	border: border,
 })
 
@@ -87,6 +87,7 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 				await Promise.resolve()
 					.then(async () => new Audio('/Loud_Noise.mp3').play())
 					.then(async () => {
+						// wait fifteen seconds to let the user recover and find the tab
 						await new Promise((done) => setTimeout(done, 15000))
 						const audio = new Audio('/dio.mp3')
 						audio.loop = true // ew
@@ -95,7 +96,7 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 			} catch (error) {
 				console.error(error)
 			}
-			// extra secret
+			// extra secret: Joey
 			const amv = 'https://www.youtube.com/embed/orsYHTkgZBc?autoplay=1&controls=0&loop=1&rel=0'
 			const answer = prompt('OMAE WA MO SHINDEIRU', 'NANI!?')
 			window.location = answer === 'KONO DIO DA!' ? amv : egg
@@ -161,34 +162,36 @@ const AnimeParty = ({ api, csv, egg, refreshInterval, tsv }) => {
 	}
 	const when = jsonRequest.justBefore || new Date() // yuck
 	const took = 1 + (new Date() - when) // load duration in ms
-
+	const repo = "https://github.com/hagemt/dio"
 	return (
 		<>
 			<Head>
 				<title>Dio</title>
 			</Head>
 			<Navbar bg="light" expand="md">
-				{navBranding('Dio')}
-				<Navbar.Toggle aria-controls="basic-navbar-nav" />
-				<Navbar.Collapse>
-					<Nav activeKey="#">
-						<Nav.Item>
-							<Nav.Link href="https://github.com/hagemt/dio">Code (.git)</Nav.Link>
-						</Nav.Item>
-						<Nav.Item>
-							<Nav.Link href="#">Home (live)</Nav.Link>
-						</Nav.Item>
-						<Nav.Item>
-							<Nav.Link href={csv}>Votes (.csv)</Nav.Link>
-						</Nav.Item>
-						<Nav.Item>
-							<Nav.Link href={api}>API (json)</Nav.Link>
-						</Nav.Item>
-						<Nav.Item>
-							<Nav.Link href={tsv}>Anime (.tsv)</Nav.Link>
-						</Nav.Item>
-					</Nav>
-				</Navbar.Collapse>
+				<Container>
+					{navBranding('Dio')}
+					<Navbar.Toggle aria-controls="basic-navbar-nav" />
+					<Navbar.Collapse>
+						<Nav activeKey="#">
+							<Nav.Item>
+								<Nav.Link href={repo}>Code (.git)</Nav.Link>
+							</Nav.Item>
+							<Nav.Item>
+								<Nav.Link href="#">Home (live)</Nav.Link>
+							</Nav.Item>
+							<Nav.Item>
+								<Nav.Link href={csv}>Votes (.csv)</Nav.Link>
+							</Nav.Item>
+							<Nav.Item>
+								<Nav.Link href={api}>API (json)</Nav.Link>
+							</Nav.Item>
+							<Nav.Item>
+								<Nav.Link href={tsv}>Anime (.tsv)</Nav.Link>
+							</Nav.Item>
+						</Nav>
+					</Navbar.Collapse>
+				</Container>
 			</Navbar>
 			<main className="container">
 				<Container className="pt-3">

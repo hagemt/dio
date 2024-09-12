@@ -4,18 +4,19 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "bootstrap": "4.6.0",
-    "bootstrap-icons": "1.5.0",
-    "jquery": "3.6.3",
-    "konami": "1.6.3",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "5.3.3",
+    "bootstrap-icons": "1.11.3",
+    "jquery": "3.7.1",
+    "konami": "1.7.0",
     "popper.js": "1.16.1",
-    "react": "18.2.0",
-    "react-bootstrap": "1.6.1",
-    "react-dom": "18.2.0",
-    "swr": "2.0.4"
+    "react": "18.3.1",
+    "react-bootstrap": "2.10.4",
+    "react-dom": "18.3.1",
+    "swr": "2.2.5"
   },
   "devDependencies": {
-    "@types/node": "18.14.1",
+    "@types/node": "22.5.4",
     "cross-env": "7.0.3",
     "eslint": "8.34.0",
     "eslint-config-next": "13.2.1",
@@ -25,13 +26,12 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "7.32.2",
     "mocha": "10.2.0",
-    "next": "13.2.1",
+    "next": "14.2.10",
     "ngrok": "4.3.3",
     "nyc": "15.1.0",
     "prettier": "2.8.4",
-    "serve": "14.2.0",
-    "typescript": "4.9.5",
-    "vercel": "28.16.7"
+    "serve": "14.2.3",
+    "typescript": "4.9.5"
   },
   "prettier": {
     "printWidth": 120,
